@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>首页</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ececec;
+        }
+
+        .navbar {
+            width: 100%;
+            height: 80px;
+            background-color: #333333;
+            display: flex;
+            align-items: center;
+        }
+
+        .content {
+            width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info a {
+            color: white;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .user-info a:hover {
+            cursor: pointer;
+        }
+
+        .content-wrapper {
+            width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .module {
+            width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .left-module {
+            width: 860px;
+            /* background-color: #999; */
+            /* height: 500px; */
+        }
+
+        .right-module {
+            width: 320px;
+            height: 300px;
+        }
+
+        .right-module .button {
+            width: 100%;
+            height: 60px;
+            color: white;
+            font-weight: bold;
+            background-color: #333;
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        /* alt+shift+f */
+        .right-module .image-container {
+            border: 1px dashed #999;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .right-module .image-container p {
+            margin: 0;
+        }
+
+        .left-module .module {
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .left-module .module>div {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .left-module .module p {
+            margin: 0;
+        }
+
+        .left-module .module textarea,
+        .left-module .module select,
+        .left-module .module input[type="number"],
+        .left-module .module input[type="text"] {
+            width: 100%;
+            resize: none;
+        }
+
+        .left-module .module .progress-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .left-module .module .progress-container input[type="range"] {
+            flex-grow: 1;
+            height: 20px;
+            width: 750px;
+        }
+
+        .left-module .module .progress-container input[type="number"] {
+            width: 60px;
+            margin-left: 10px;
+        }
+
+        .prompt-module textarea,
+        .reverse-prompt-module textarea {
+            height: 100px;
+            resize: none;
+            width: 100%;
+        }
+
+        .sampling-method-module select {
+            height: 40px;
+            width: 100%;
+        }
+
+        .sampling-steps-module input[type="range"],
+        .width-module input[type="range"],
+        .height-module input[type="range"],
+        .prompt-correlation-module input[type="range"] {
+            width: 750px;
+        }
+
+        .batch-size-module input[type="number"],
+        .random-seed-module input[type="text"] {
+            width: 100%;
+            height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="content">
+            <div class="nav-links">
+                <a href="/">首页</a>
+                <a href="/imglist">图片列表</a>
+            </div>
+            <div class="user-info">
+                <a href="#">欢迎回来：{{username}}</a>
+                <a href="/login">退出</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="module">
+            <!-- 左模块开始 -->
+            <div class="left-module">
+                <div class="prompt-module">
+                    <p>提示词</p>
+                    <textarea rows="4" cols="50" id="prompt"></textarea>
+                </div>
+                <div class="reverse-prompt-module">
+                    <p>反向提示词</p>
+                    <textarea rows="4" cols="50" id="negative_prompt"></textarea>
+                </div>
+                <div class="sampling-method-module">
+                    <p>采样方法</p>
+                    <select id="sampler_index">
+                        <option value="Euler a">Euler a</option>
+                        <option value="DPM++ 2S a Karras">DPM++ 2S a Karras</option>
+                        <option value="DDIM">DDIM</option>
+                    </select>
+                </div>
+                <div class="sampling-steps-module">
+                    <p>采样迭代步数</p>
+                    <div class="progress-container">
+                        <input type="range" min="1" max="150" value="20" step="1" id="steps">
+                        <input type="number" min="1" max="150" value="20" id="steps-input">
+                    </div>
+                </div>
+                <div class="width-module">
+                    <p>宽度</p>
+                    <div class="progress-container">
+                        <input type="range" min="64" max="512" value="256" step="1" id="width">
+                        <input type="number" min="64" max="512" value="256" id="width-input">
+                    </div>
+                </div>
+                <div class="height-module">
+                    <p>高度</p>
+                    <div class="progress-container">
+                        <input type="range" min="64" max="512" value="256" step="1" id="height">
+                        <input type="number" min="64" max="512" value="256" id="height-input">
+                    </div>
+                </div>
+                <div class="prompt-correlation-module">
+                    <p>提示词相关性</p>
+                    <div class="progress-container">
+                        <input type="range" min="1" max="30" value="7" step="1" id="cfg_scale">
+                        <input type="number" min="1" max="30" value="7" id="cfg_scale-input">
+                    </div>
+                </div>
+                <div class="batch-size-module">
+                    <p>生成数量</p>
+                    <input type="number" min="1" value="1" id="batch_size">
+                </div>
+                <div class="random-seed-module">
+                    <p>随机种子</p>
+                    <input type="text" value="-1" id="seed">
+                </div>
+            </div>
+
+
+            <!-- 左模块结束 -->
+            <div class="right-module">
+                <button class="button">提交</button>
+                <div class="image-container">
+                    <p>暂无任务</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 获取元素
+        const stepsRange = document.getElementById('steps');
+        const stepsInput = document.getElementById('steps-input');
+        const widthRange = document.getElementById('width');
+        const widthInput = document.getElementById('width-input');
+        const heightRange = document.getElementById('height');
+        const heightInput = document.getElementById('height-input');
+        const cfgScaleRange = document.getElementById('cfg_scale');
+        const cfgScaleInput = document.getElementById('cfg_scale-input');
+
+        // 更新输入框的值
+        stepsRange.addEventListener('input', function () {
+            stepsInput.value = this.value;
+        });
+
+        widthRange.addEventListener('input', function () {
+            widthInput.value = this.value;
+        });
+
+        heightRange.addEventListener('input', function () {
+            heightInput.value = this.value;
+        });
+
+        cfgScaleRange.addEventListener('input', function () {
+            cfgScaleInput.value = this.value;
+        });
+
+        // 更新滑动条的值
+        stepsInput.addEventListener('input', function () {
+            stepsRange.value = this.value;
+        });
+
+        widthInput.addEventListener('input', function () {
+            widthRange.value = this.value;
+        });
+
+        heightInput.addEventListener('input', function () {
+            heightRange.value = this.value;
+        });
+
+        cfgScaleInput.addEventListener('input', function () {
+            cfgScaleRange.value = this.value;
+        });
+
+        // 获取提交按钮元素
+        const submitButton = document.querySelector('.button');
+
+        // 添加点击事件监听器
+        submitButton.addEventListener('click', function () {
+            // 获取各个输入框的值
+            const promptValue = document.getElementById('prompt').value;
+            const negativePromptValue = document.getElementById('negative_prompt').value;
+            const samplerIndexValue = document.getElementById('sampler_index').value;
+            const stepsValue = document.getElementById('steps').value;
+            const widthValue = document.getElementById('width').value;
+            const heightValue = document.getElementById('height').value;
+            const cfgScaleValue = document.getElementById('cfg_scale').value;
+            const batchSizeValue = document.getElementById('batch_size').value;
+            const seedValue = document.getElementById('seed').value;
+
+            // 构造数据对象
+            const data = {
+                prompt: promptValue,
+                negative_prompt: negativePromptValue,
+                sampler_index: samplerIndexValue,
+                steps: stepsValue,
+                width: widthValue,
+                height: heightValue,
+                cfg_scale: cfgScaleValue,
+                batch_size: batchSizeValue,
+                seed: seedValue
+            };
+
+            // 创建XMLHttpRequest对象
+            const xhr = new XMLHttpRequest();
+
+            // 设置请求方法和URL
+            xhr.open('POST', '/txt2img');
+
+            // 设置请求头
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            // 设置响应类型为JSON
+            xhr.responseType = 'json';
+
+            // 设置超时时间为360秒
+            xhr.timeout = 360000;
+
+            // 获取 image-container 元素
+            const imageContainer = document.querySelector('.image-container');
+
+            // 将提示信息改为 "正在生成图片，请稍候！！！"
+            imageContainer.innerHTML = '<p>正在生成图片，请稍候！！！</p>';
+
+            // 监听请求完成事件
+            xhr.onload = function () {
+                if (xhr.status === 200 && xhr.response.code === 1) {
+                    // 生成成功，处理响应数据
+                    const imglist = xhr.response.imglist;
+                    // 清空 image-container
+                    imageContainer.innerHTML = '';
+                    // 动态添加图片元素
+                    imglist.forEach(function (imgPath) {
+                        const imgElement = document.createElement('img');
+                        imgElement.src = imgPath;
+                        // 设置图片的宽度和高度为100
+                        imgElement.style.width = '100px';
+                        imgElement.style.height = '100px';
+                        // 设置图片之间的间距为10px
+                        imgElement.style.marginRight = '10px';
+                        imgElement.style.marginBottom = '10px';
+                        // 添加图片元素到 image-container
+                        imageContainer.appendChild(imgElement);
+                    });
+                    // 隐藏提示信息
+                    imageContainer.querySelector('p').style.display = 'none';
+                    // 设置图片容器的样式为弹性布局，一行放不下时自动换行
+                   
+                } else {
+                    // 生成失败，处理响应数据
+                    console.log('生成失败');
+                }
+            };
+
+            // 监听请求错误事件
+            xhr.onerror = function () {
+                // 处理请求错误
+                console.error('请求错误');
+            };
+
+            // 发送POST请求
+            xhr.send(JSON.stringify(data));
+        });
+
+    </script>
+
+</body>
+
+</html>

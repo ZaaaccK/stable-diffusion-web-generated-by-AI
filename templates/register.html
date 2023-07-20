@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>用户注册</title>
+    <style>
+        body {
+            background-color: lightgray;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .login-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            width: 580px;
+            animation: slide-in 0.5s ease-in-out;
+        }
+
+        @keyframes slide-in {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-box h1 {
+            text-align: center;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .login-box label {
+            display: block;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .login-box input[type="text"],
+        .login-box input[type="password"] {
+            width: 100%;
+            height: 35px;
+            padding: 5px;
+            border: 1px solid lightgray;
+            border-radius: 5px;
+        }
+
+        .login-box .message {
+            margin-top: 20px;
+        }
+
+        .login-box .register-link {
+            color: blue;
+        }
+
+        .login-box button {
+            background-color: green;
+            color: white;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-box">
+        <h1>用户注册</h1>
+        <label for="username">用户账号</label>
+        <input type="text" id="username" name="username">
+        <label for="password">用户密码</label>
+        <input type="password" id="password" name="password">
+        <label for="confirm-password">确认密码</label>
+        <input type="password" id="confirm-password" name="confirm-password">
+        <div class="message">
+            已有账号？请 <a href="/login" id="login-link">登录</a>
+        </div>
+        <button type="submit" id="register-button">注册</button>
+    </div>
+
+    <script>
+        // JavaScript代码
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const registerButton = document.getElementById('register-button');
+        const loginLink = document.getElementById('login-link');
+
+        registerButton.addEventListener('click', (event) => {
+            event.preventDefault(); // 阻止表单提交
+
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            const confirmPassword = confirmPasswordInput.value.trim();
+
+            if (username === '' || password === '') {
+                alert('用户名和密码不能为空！');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('密码和确认密码不一致！');
+                return;
+            }
+
+            const data = {
+                username: username,
+                password: password
+            };
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/register', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.response);
+                        if (response.code === 1) {
+                            // 注册成功，跳转到登录页
+                            window.location.href = '/login';
+                        } else {
+                            // 注册失败
+                            console.error(response.message);
+                        }
+                    } else {
+                        // 请求失败
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+
+            xhr.send(JSON.stringify(data));
+        });
+
+        loginLink.addEventListener('click', () => {
+            window.location.href = '/login';
+        });
+    </script>
+</body>
+
+</html>

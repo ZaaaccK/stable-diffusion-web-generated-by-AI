@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>登录页</title>
+    <style>
+        body {
+            background-color: lightgray;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        
+        .login-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            width: 580px;
+            animation: slide-in 0.5s ease-in-out;
+        }
+        
+        @keyframes slide-in {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-box h1 {
+            text-align: center;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        
+        .login-box label {
+            display: block;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .login-box input[type="text"],
+        .login-box input[type="password"] {
+            width: 100%;
+            height: 40px;
+            padding: 5px;
+            border: 1px solid lightgray;
+            border-radius: 5px;
+        }
+        
+        .login-box .message {
+            margin-top: 20px;
+        }
+        
+        .login-box .register-link {
+            color: blue;
+        }
+        
+        .login-box button {
+            background-color: green;
+            color: white;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h1>用户登录</h1>
+        <label for="username">用户账号</label>
+        <input type="text" id="username" name="username">
+        <label for="password">用户密码</label>
+        <input type="password" id="password" name="password">
+        <div class="message">
+            还没账号？<a href="/register">去注册</a>
+        </div>
+        <button type="submit" onclick="login()">登录</button>
+    </div>
+    
+    <script>
+        function login() {
+            
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+    
+            // 非空判断
+            if (!username || !password) {
+                console.error('用户名和密码不能为空');
+                return;
+            }
+    
+            // 构建请求数据
+            var data = {
+                username: username,
+                password: password
+            };
+
+            console.log(data);
+    
+            // 发送登录请求
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/login');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.response);
+                        if (response.code === 1) {
+                            // 登录成功，跳转到其他页面
+                            window.location.href = '/';
+                        } else {
+                            // 登录失败
+                            console.error(response.message);
+                        }
+                    } else {
+                        // 请求失败
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.send(JSON.stringify(data));
+        }
+    </script>
+</body>
+</html>
