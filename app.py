@@ -34,11 +34,11 @@ def login():
             with open('data/userlist.json', 'r') as f:
                 userlist = json.load(f)
         except FileNotFoundError:
-            return {'code': 2, 'message': '用户不存在'}
+            return jsonify({'code': 2, 'message': '用户不存在'})
 
         # 判断用户名是否存在
         if data['username'] not in userlist:
-            return {'code': 2, 'message': '用户不存在'}
+            return jsonify({'code': 2, 'message': '用户不存在'})
 
         # 判断密码是否正确
         password = data['password']
@@ -46,9 +46,9 @@ def login():
         if hashed_password == userlist[data['username']]['password']:
             # 登录成功，设置 Session
             session['username'] = data['username']
-            return {'code': 1, 'message': '用户登录成功'}
+            return jsonify({'code': 1, 'message': '用户登录成功'})
         else:
-            return {'code': 3, 'message': '密码错误'}
+            return jsonify({'code': 3, 'message': '密码错误'})
 
 
 @app.route('/register', methods=['GET', 'POST'])

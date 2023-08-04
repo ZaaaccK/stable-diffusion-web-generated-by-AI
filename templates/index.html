@@ -373,6 +373,7 @@
                 } else {
                     // 生成失败，处理响应数据
                     console.log('生成失败');
+                    alert('生成失败')
                 }
             };
 
@@ -380,6 +381,7 @@
             xhr.onerror = function () {
                 // 处理请求错误
                 console.error('请求错误');
+                alert('请求错误')
             };
 
             // 发送POST请求

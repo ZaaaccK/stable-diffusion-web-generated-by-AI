@@ -93,6 +93,7 @@
             // 非空判断
             if (!username || !password) {
                 console.error('用户名和密码不能为空');
+                alert('用户名和密码不能为空')
                 return;
             }
     
@@ -118,15 +119,18 @@
                         } else {
                             // 登录失败
                             console.error(response.message);
+                            alert(response.message)
                         }
                     } else {
                         // 请求失败
                         console.error(xhr.statusText);
+                        alert(response.message)
                     }
                 }
             };
             xhr.send(JSON.stringify(data));
         }
+
     </script>
 </body>
 </html>
